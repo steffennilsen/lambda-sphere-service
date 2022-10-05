@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "aws-lambda-ric": "^2.0.0",
+    "pythonia": "^1.0.0"
+  }
+}
