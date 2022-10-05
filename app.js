@@ -1,15 +1,39 @@
+'use strict';
+
+const axios = require('axios');
+
 const sv = require('./sv');
 const sg = require('./sg');
 
-const voronoi = async (points, radius, center) =>
-  await sv.calculateSphericalVoronoi(points, radius, center);
+exports.handler = async (event) => {
+  const { npoints, seed } = event;
 
-const handler = async (event, context) => {
-  console.log(event);
-  console.log(context);
-  console.log(await voronoi(sg.points(12, 123)));
+  if (
+    !npoints ||
+    !seed ||
+    !Number.isInteger(npoints) ||
+    !Number.isInteger(seed)
+  ) {
+    let response = {
+      statusCode: 200,
+      headers: {
+        'content-type': 'text/plain; charset=utf-8',
+      },
+      body: 'Please provide npoints and seed as uint32',
+    };
+    return Promise.resolve(response);
+  }
+
+  const radius = 1;
+  const center = [0, 0, 0];
+  const points = await sg.points(npoints, seed);
+  const voronoi = await sv.calculateSphericalVoronoi(points, radius, center);
+
+  return {
+    statusCode: 200,
+    headers: {
+      'content-type': 'text/plain; charset=utf-8',
+    },
+    body: voronoi,
+  };
 };
-
-// exports.voronoi = voronoi;
-// exports.points = sg.points;
-exports.handler = handler;
