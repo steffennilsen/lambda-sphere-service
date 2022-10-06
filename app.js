@@ -3,25 +3,15 @@
 const sv = require('./sv');
 const sg = require('./sg');
 
-exports.handler = async (event) => {
-  console.log('Received event:', event);
-
+exports.handler = async (event, context, callback) => {
   if (!event.body) {
-    return {
-      statusCode: 400,
-      headers: {
-        'content-type': 'text/plain; charset=utf-8',
-      },
-      body: {
-        message: 'missing body',
-      },
-    };
+    callback(null, {
+      message: 'Missing body',
+    });
+    return;
   }
 
-  console.log('###BODY###');
-  console.log(event.body);
-  const { npoints, seed } = event.body;
-  console.log('npoints', npoints, 'seed', seed);
+  const { npoints, seed } = JSON.parse(event.body);
 
   if (
     !npoints ||
@@ -29,15 +19,10 @@ exports.handler = async (event) => {
     !Number.isInteger(npoints) ||
     !Number.isInteger(seed)
   ) {
-    return {
-      statusCode: 400,
-      headers: {
-        'content-type': 'text/plain; charset=utf-8',
-      },
-      body: {
-        message: 'Please provide npoints and seed as uint32',
-      },
-    };
+    callback(null, {
+      message: 'Please provide npoints and seed as uint32',
+    });
+    return;
   }
 
   const radius = 1;
@@ -45,12 +30,5 @@ exports.handler = async (event) => {
   const points = await sg.points(npoints, seed);
   const voronoi = await sv.calculateSphericalVoronoi(points, radius, center);
 
-  return {
-    isBase64Encoded: false,
-    statusCode: 200,
-    headers: {
-      'content-type': 'text/plain; charset=utf-8',
-    },
-    body: voronoi,
-  };
+  callback(null, voronoi);
 };
