@@ -4,8 +4,8 @@ const sv = require('./sv');
 const sg = require('./sg');
 
 exports.handler = async (event) => {
-  console.log('Received event:', JSON.stringify(event, null, 2));
-  const { npoints, seed } = event;
+  console.log('Received event:', event);
+  const { npoints, seed } = event.body;
 
   if (
     !npoints ||
