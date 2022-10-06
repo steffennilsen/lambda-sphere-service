@@ -4,6 +4,7 @@ const sv = require('./sv');
 const sg = require('./sg');
 
 exports.handler = async (event) => {
+  console.log('Received event:', JSON.stringify(event, null, 2));
   const { npoints, seed } = event;
 
   if (
@@ -19,7 +20,6 @@ exports.handler = async (event) => {
       },
       body: {
         message: 'Please provide npoints and seed as uint32',
-        event: JSON.parse(event),
       },
     };
   }
@@ -30,7 +30,6 @@ exports.handler = async (event) => {
   const voronoi = JSON.parse(
     await sv.calculateSphericalVoronoi(points, radius, center),
   );
-  console.log(voronoi);
 
   return {
     statusCode: 200,
