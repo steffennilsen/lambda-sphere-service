@@ -17,7 +17,10 @@ exports.handler = async (event) => {
       headers: {
         'content-type': 'text/plain; charset=utf-8',
       },
-      body: 'Please provide npoints and seed as uint32',
+      body: {
+        message: 'Please provide npoints and seed as uint32',
+        event: JSON.parse(event),
+      },
     };
   }
 
