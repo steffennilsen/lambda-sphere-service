@@ -21,6 +21,7 @@ exports.handler = async (event) => {
   console.log('###BODY###');
   console.log(event.body);
   const { npoints, seed } = event.body;
+  console.log('npoints', npoints, 'seed', seed);
 
   if (
     !npoints ||
@@ -42,11 +43,10 @@ exports.handler = async (event) => {
   const radius = 1;
   const center = [0, 0, 0];
   const points = await sg.points(npoints, seed);
-  const voronoi = JSON.parse(
-    await sv.calculateSphericalVoronoi(points, radius, center),
-  );
+  const voronoi = await sv.calculateSphericalVoronoi(points, radius, center);
 
   return {
+    isBase64Encoded: false,
     statusCode: 200,
     headers: {
       'content-type': 'text/plain; charset=utf-8',

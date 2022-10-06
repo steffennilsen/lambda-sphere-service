@@ -12,8 +12,6 @@ function updateLambda () {
   local REPO="414097980318.dkr.ecr.eu-north-1.amazonaws.com/lambda-sphere-service"
   local URI="${REPO}@${DIGEST}"
 
-  echo $line
-  echo $URI
   aws lambda update-function-code --function-name ${FUNCTION_NAME} --image-uri ${URI}
 }
 
