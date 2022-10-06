@@ -5,6 +5,21 @@ const sg = require('./sg');
 
 exports.handler = async (event) => {
   console.log('Received event:', event);
+
+  if (!event.body) {
+    return {
+      statusCode: 400,
+      headers: {
+        'content-type': 'text/plain; charset=utf-8',
+      },
+      body: {
+        message: 'missing body',
+      },
+    };
+  }
+
+  console.log('###BODY###');
+  console.log(event.body);
   const { npoints, seed } = event.body;
 
   if (
@@ -14,7 +29,7 @@ exports.handler = async (event) => {
     !Number.isInteger(seed)
   ) {
     return {
-      statusCode: 200,
+      statusCode: 400,
       headers: {
         'content-type': 'text/plain; charset=utf-8',
       },
